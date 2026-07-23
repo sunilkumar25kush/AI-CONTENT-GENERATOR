@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Content Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== Header Section ===== -->
+    <header>
+        <h1>🤖 AI Content Generator</h1>
+    
+    </header>
+
+    <!-- ===== Navigation Tabs ===== -->
+    <nav class="tabs">
+        <button class="tab-btn active" data-tab="ask">💬 Ask Me Anything</button>
+        <button class="tab-btn" data-tab="summarize">📝 Quick Summarizer</button>
+        <button class="tab-btn" data-tab="ideas">💡 Idea Spark</button>
+    </nav>
+
+    <!-- ===== Main Content Area ===== -->
+    <main class="container">
+
+        <!-- Feature 1: Ask Me Anything -->
+        <section id="ask" class="tab-content active">
+            <h2>Ask Me Anything</h2>
+            <p class="description">Type any question and get an AI-powered answer instantly.</p>
+
+            <div class="input-group">
+                <input
+                    type="text"
+                    id="ask-input"
+                    placeholder="e.g., What is the speed of light?"
+                />
+                <button id="ask-btn" class="action-btn">Ask</button>
+            </div>
+
+            <div id="ask-result" class="result-box hidden">
+                <h3>Answer:</h3>
+                <div id="ask-output" class="markdown-content"></div>
+            </div>
+        </section>
+
+        <!-- Feature 2: Quick Summarizer -->
+        <section id="summarize" class="tab-content">
+            <h2>Quick Summarizer</h2>
+            <p class="description">Paste a block of text and get a concise summary.</p>
+
+            <div class="input-group">
+                <textarea
+                    id="summarize-input"
+                    rows="6"
+                    placeholder="Paste your long text here..."
+                ></textarea>
+                <button id="summarize-btn" class="action-btn">Summarize</button>
+            </div>
+
+            <div id="summarize-result" class="result-box hidden">
+                <h3>Summary:</h3>
+                <div id="summarize-output" class="markdown-content"></div>
+            </div>
+        </section>
+
+        <!-- Feature 3: Idea Spark -->
+        <section id="ideas" class="tab-content">
+            <h2>Idea Spark</h2>
+            <p class="description">Need inspiration? Ask for ideas on any topic!</p>
+
+            <div class="input-group">
+                <input
+                    type="text"
+                    id="ideas-input"
+                    placeholder="e.g., blog post ideas about JavaScript"
+                />
+                <button id="ideas-btn" class="action-btn">Get Ideas</button>
+            </div>
+
+            <div id="ideas-result" class="result-box hidden">
+                <h3>Ideas:</h3>
+                <div id="ideas-output" class="markdown-content"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== Footer ===== -->
+    <footer>
+        <!-- <p>Built with ❤️ using Vanilla JavaScript & Gemini AI</p> -->
+    </footer>
+
+    <!-- API Keys (secret - not pushed to GitHub) -->
+    <script src="config.js"></script>
+    <!-- Link to our JavaScript file -->
+    <script src="app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+# Secret files — never push to GitHub
+config.js
+.env
+.env.local
+.env.*.local

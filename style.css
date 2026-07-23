@@ -1,0 +1,624 @@
+/* =============================================
+   AI CONTENT GENERATOR — CYBERPUNK GLASSMORPHISM
+   Matches: dark bg + colorful bokeh + code aesthetic
+   ============================================= */
+
+/* ---------- Google Font ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ---------- CSS Custom Properties ---------- */
+:root {
+    --neon-cyan: #00f5ff;
+    --neon-purple: #bf5af2;
+    --neon-pink: #ff375f;
+    --neon-yellow: #ffd60a;
+    --neon-green: #30d158;
+
+    --glass-bg: rgba(10, 10, 20, 0.55);
+    --glass-border: rgba(0, 245, 255, 0.18);
+    --glass-hover: rgba(10, 10, 30, 0.72);
+
+    --text-primary: #f0f6ff;
+    --text-secondary: #a8b8d0;
+    --text-muted: #657592;
+
+    --radius-lg: 20px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Reset & Base ---------- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: var(--text-primary);
+    line-height: 1.7;
+
+    /* ── BACKGROUND IMAGE ── */
+    background-image: url('https://i.pinimg.com/1200x/06/6f/a2/066fa2cb37aa563522fa6c1f0760d172.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    /* background-color: #050510; */
+
+
+    /* Dark overlay to keep text readable without hiding the image */
+    position: relative;
+}
+
+/* Semi-transparent dark overlay sits between image and content */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg,
+            rgba(0, 0, 10, 0.70) 0%,
+            rgba(5, 0, 20, 0.70) 50%,
+            rgba(0, 0, 10, 0.70) 100%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* All direct children of body stack above the overlay */
+body>* {
+    position: relative;
+    z-index: 1;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--neon-cyan);
+    border-radius: 4px;
+    opacity: 0.5;
+}
+
+/* =============================================
+   HEADER
+   ============================================= */
+header {
+    text-align: center;
+    padding: 52px 24px 28px;
+}
+
+header h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+
+    /* Neon glow effect matching the cyan bokeh lights */
+    text-shadow:
+        0 0 8px var(--neon-cyan),
+        0 0 20px var(--neon-cyan),
+        0 0 42px rgba(0, 245, 255, 0.45),
+        0 0 80px rgba(0, 245, 255, 0.18);
+
+    animation: headerPulse 3s ease-in-out infinite alternate;
+}
+
+header h1 .emoji {
+    display: inline-block;
+    animation: spin 6s linear infinite;
+}
+
+@keyframes headerPulse {
+    from {
+        text-shadow: 0 0 8px var(--neon-cyan), 0 0 20px var(--neon-cyan), 0 0 42px rgba(0, 245, 255, 0.45);
+    }
+
+    to {
+        text-shadow: 0 0 12px var(--neon-purple), 0 0 28px var(--neon-purple), 0 0 60px rgba(191, 90, 242, 0.5);
+    }
+}
+
+/* Decorative line under header */
+header::after {
+    content: '';
+    display: block;
+    margin: 20px auto 0;
+    width: 200px;
+    height: 2px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            var(--neon-cyan) 30%,
+            var(--neon-purple) 70%,
+            transparent 100%);
+    border-radius: 2px;
+    box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+/* =============================================
+   NAV TABS
+   ============================================= */
+nav.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 0 24px 36px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    /* color: var(--text-secondary); */
+    /* background: var(--glass-bg); */
+     background:var(--neon-cyan);
+         color: var(--text-secondary);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    padding: 10px 26px;
+    cursor: pointer;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Sheen effect on hover */
+.tab-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 40%, rgba(255, 255, 255, 0.07) 50%, transparent 60%);
+    transform: translateX(-100%);
+    transition: 0.5s ease;
+}
+
+.tab-btn:hover::before {
+    transform: translateX(100%);
+}
+
+.tab-btn:hover {
+    /* color: var(--neon-cyan); */
+    border-color: rgba(0, 245, 255, 0.5);
+    /* background: rgba(0, 245, 255, 0.07); */
+    box-shadow: 0 0 18px rgba(0, 245, 255, 0.25), inset 0 0 12px rgba(0, 245, 255, 0.06);
+    transform: translateY(-2px);
+}
+
+.tab-btn.active {
+    color: #000;
+    background: var(--neon-cyan);
+    border-color: var(--neon-cyan);
+    box-shadow:
+        0 0 20px rgba(0, 245, 255, 0.55),
+        0 4px 18px rgba(0, 245, 255, 0.35);
+    font-weight: 700;
+}
+
+/* =============================================
+   MAIN CONTAINER
+   ============================================= */
+main.container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+}
+
+/* =============================================
+   TAB SECTIONS (Glass Cards)
+   ============================================= */
+.tab-content {
+    display: none;
+    animation: fadeSlideIn 0.4s ease forwards;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---- Section heading ---- */
+.tab-content h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--neon-cyan);
+    margin-bottom: 6px;
+    text-shadow: 0 0 12px rgba(0, 245, 255, 0.5);
+}
+
+.tab-content .description {
+    font-size: 0.95rem;
+    color: #d0d0e0;
+    margin-bottom: 24px;
+    padding-left: 2px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* =============================================
+   GLASSMORPHISM INPUT CARD
+   ============================================= */
+.input-group {
+    background: rgba(10, 10, 25, 0.85);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    padding: 28px 28px 22px;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: var(--transition);
+}
+
+.input-group:focus-within {
+    border-color: rgba(0, 245, 255, 0.4);
+    box-shadow:
+        0 8px 40px rgba(0, 0, 0, 0.55),
+        0 0 0 1px rgba(0, 245, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* ---------- Text Input ---------- */
+input[type="text"] {
+    width: 100%;
+    background: rgba(15, 15, 35, 0.9);
+    border: 1px solid rgba(255, 102, 128, 0.3);
+    border-radius: var(--radius-md);
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    padding: 14px 18px;
+    outline: none;
+    transition: var(--transition);
+    caret-color: #ff6680;
+}
+
+input[type="text"]::placeholder {
+    color: var(--text-muted);
+}
+
+input[type="text"]:focus {
+    background: rgba(255, 102, 128, 0.06);
+    border-color: #ff6680;
+    box-shadow: 0 0 0 3px rgba(255, 102, 128, 0.15);
+}
+
+/* ---------- Textarea ---------- */
+textarea {
+    width: 100%;
+    background: rgba(15, 15, 35, 0.9);
+    border: 1px solid rgba(255, 102, 128, 0.3);
+    border-radius: var(--radius-md);
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.93rem;
+    line-height: 1.7;
+    padding: 14px 18px;
+    outline: none;
+    resize: vertical;
+    min-height: 130px;
+    transition: var(--transition);
+    caret-color: #ff6680;
+}
+
+textarea::placeholder {
+    color: var(--text-muted);
+}
+
+textarea:focus {
+    background: rgba(255, 102, 128, 0.06);
+    border-color: #ff6680;
+    box-shadow: 0 0 0 3px rgba(255, 102, 128, 0.15);
+}
+
+/* ---------- Action Button ---------- */
+.action-btn {
+    margin-top: 16px;
+    width: 100%;
+    padding: 14px 24px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
+    background: linear-gradient(135deg, #ff6680 0%, #ff4d6d 100%);
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+        0 4px 18px rgba(255, 102, 128, 0.45),
+        0 0 0 0 #ff6680;
+}
+
+.action-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.25) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: 0.55s ease;
+}
+
+.action-btn:hover::after {
+    transform: translateX(120%);
+}
+
+.action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 8px 28px rgba(255, 102, 128, 0.65),
+        0 0 0 1px rgba(255, 102, 128, 0.5);
+}
+
+.action-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(255, 102, 128, 0.45);
+}
+
+/* =============================================
+   RESULT BOX (Glass Output Card)
+   ============================================= */
+.result-box {
+    margin-top: 20px;
+    background: rgba(5, 5, 18, 0.90);
+    border: 1px solid rgba(0, 245, 255, 0.25);
+    border-radius: var(--radius-lg);
+    padding: 26px 28px;
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    animation: fadeSlideIn 0.4s ease forwards;
+}
+
+.result-box h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--neon-cyan);
+    margin-bottom: 14px;
+    opacity: 0.85;
+}
+
+.result-box p {
+    font-size: 1rem;
+    color: #ffffff;
+    line-height: 1.9;
+    font-weight: 400;
+    /* Strong readability over dark glass */
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+}
+
+.result-box.hidden {
+    display: none;
+}
+
+/* =============================================
+   MARKDOWN & CLEAN OUTPUT STYLING
+   ============================================= */
+.markdown-content {
+    font-size: 0.96rem;
+    color: var(--text-primary);
+    line-height: 1.85;
+}
+
+.markdown-content p {
+    margin-bottom: 14px;
+    font-size: 0.96rem;
+    color: #e2e8f0;
+    line-height: 1.85;
+}
+
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--neon-cyan);
+    margin: 20px 0 10px 0;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+.markdown-content h2 {
+    font-size: 1.2rem;
+    border-bottom: 1px solid rgba(0, 245, 255, 0.25);
+    padding-bottom: 8px;
+}
+
+.markdown-content h3 {
+    font-size: 1.08rem;
+    color: var(--neon-cyan);
+}
+
+.markdown-content h4 {
+    font-size: 1.0rem;
+    color: #ff6680;
+}
+
+.markdown-content strong {
+    color: var(--neon-yellow);
+    font-weight: 600;
+}
+
+.markdown-content em {
+    color: var(--neon-purple);
+    font-style: italic;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    margin: 12px 0 16px 20px;
+    padding-left: 10px;
+}
+
+.markdown-content li {
+    margin-bottom: 8px;
+    line-height: 1.75;
+    color: #f1f5f9;
+}
+
+.markdown-content li strong {
+    color: var(--neon-cyan);
+}
+
+.markdown-content code {
+    background: rgba(0, 245, 255, 0.12);
+    color: var(--neon-cyan);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.88em;
+    border: 1px solid rgba(0, 245, 255, 0.2);
+}
+
+.markdown-content pre {
+    background: rgba(5, 5, 18, 0.95);
+    border: 1px solid rgba(0, 245, 255, 0.3);
+    padding: 16px;
+    border-radius: 12px;
+    overflow-x: auto;
+    margin: 16px 0;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.markdown-content pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: #a5f3fc;
+}
+
+.loading-state {
+    color: var(--neon-cyan);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.error-state {
+    color: #ff4d6d;
+    background: rgba(255, 77, 109, 0.1);
+    border: 1px solid rgba(255, 77, 109, 0.3);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+}
+
+/* =============================================
+   AMBIENT ANIMATED PARTICLES (CSS only, pure bokeh dots)
+   Simulates the colorful lights from the image
+   ============================================= */
+body::after {
+    content: '';
+    position: fixed;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--neon-cyan);
+    top: 20%;
+    left: 10%;
+    box-shadow:
+        /* Cyan dots */
+        80vw 10vh 0 3px rgba(0, 245, 255, 0.7),
+        15vw 75vh 0 2px rgba(0, 245, 255, 0.5),
+        55vw 88vh 0 4px rgba(0, 245, 255, 0.4),
+        /* Purple / pink dots */
+        30vw 20vh 0 2px rgba(191, 90, 242, 0.65),
+        70vw 55vh 0 3px rgba(255, 55, 95, 0.55),
+        90vw 40vh 0 2px rgba(255, 55, 95, 0.40),
+        /* Yellow / green dots */
+        10vw 45vh 0 2px rgba(255, 214, 10, 0.50),
+        50vw 30vh 0 3px rgba(48, 209, 88, 0.45),
+        85vw 80vh 0 2px rgba(48, 209, 88, 0.35),
+        40vw 65vh 0 4px rgba(255, 214, 10, 0.30);
+    animation: particleDrift 8s ease-in-out infinite alternate;
+    z-index: 0;
+    pointer-events: none;
+    filter: blur(1px);
+}
+
+@keyframes particleDrift {
+    from {
+        transform: translate(0, 0) scale(1.0);
+        opacity: 0.75;
+    }
+
+    to {
+        transform: translate(6px, -8px) scale(1.1);
+        opacity: 1;
+    }
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 600px) {
+    .input-group {
+        padding: 20px 18px 16px;
+    }
+
+    .result-box {
+        padding: 20px 18px;
+    }
+
+    nav.tabs {
+        gap: 8px;
+    }
+
+    .tab-btn {
+        padding: 8px 18px;
+        font-size: 0.82rem;
+    }
+}
