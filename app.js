@@ -3,12 +3,17 @@
 // Yahan hum API ki settings rakhte hain
 // ============================================
 
+// API Key retrieval function
+function getActiveApiKey() {
+    if (typeof window !== "undefined" && window.API_KEY) return window.API_KEY;
+    if (typeof window !== "undefined" && window.API_KEYS) return window.API_KEYS;
+    if (typeof API_KEY !== "undefined") return API_KEY;
+    return "";
+}
+
 // MODEL ka naam store kar rahe hain - gemini-2.5-flash
 const MODEL = "gemini-2.5-flash";
 
-// Yeh function API ka URL banata hai
-// key = API key jo hum pass karte hain
-// return = complete API URL with key
 function getApiUrl(key) {
     return `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${key}`;
 }
@@ -105,11 +110,11 @@ allTabButtons.forEach(function(button) {
 // prompt = jo text hum AI ko bhejte hain
 async function callGeminiAPI(prompt) {
     
-    // API key fetch karo (window.API_KEY ya config.js se)
-    const currentKey = window.API_KEY || window.API_KEYS || (typeof API_KEY !== "undefined" ? API_KEY : "");
+    // Key retrieval via getActiveApiKey()
+    const currentKey = getActiveApiKey();
     
-    if (!currentKey || currentKey === "YOUR_GEMINI_API_KEY_HERE" || currentKey === "your_gemini_api_key_here") {
-        throw new Error("API Key missing! Please add your Gemini API Key in .env file (GEMINI_API_KEY=\"your_key\") or config.js");
+    if (!currentKey || currentKey === "YOUR_GEMINI_API_KEY_HERE" || currentKey.includes("your_key")) {
+        throw new Error("API Key missing! Please check config.js or refresh your browser (Ctrl + F5).");
     }
 
     // API URL banao
