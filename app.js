@@ -11,171 +11,65 @@ function getActiveApiKey() {
     return "";
 }
 
-// MODEL ka naam store kar rahe hain - gemini-2.5-flash
-const MODEL = "gemini-2.5-flash";
+// MODEL Fallback List (rate limit / quota protection)
+const FALLBACK_MODELS = [
+    "gemini-3.5-flash",
+    "gemini-3.6-flash",
+    "gemini-flash-latest",
+    "gemini-2.5-flash"
+];
 
 function getApiUrl(key) {
-    return `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${key}`;
+    return `https://generativelanguage.googleapis.com/v1beta/models/${FALLBACK_MODELS[0]}:generateContent?key=${key}`;
 }
 
-
 // ============================================
-// DOM Elements - Tab Buttons
-// Yahan hum HTML ke elements ko JavaScript mein laate hain
+// API Call Function with Auto Fallback
 // ============================================
-
-// Sabhi tab buttons ko select kar rahe hain (Ask AI, Summarizer, Ideas wale buttons)
-// querySelectorAll(".tab-btn") = saare elements jinke class mein "tab-btn" hai
-// const = yeh value kabhi change nahi hogi
-const allTabButtons = document.querySelectorAll(".tab-btn");
-
-// Sabhi tab contents ko select kar rahe hain (har tab ka content area)
-// querySelectorAll(".tab-content") = saare elements jinke class mein "tab-content" hai
-// const = yeh value kabhi change nahi hogi
-const allTabContents = document.querySelectorAll(".tab-content");
-
-
-// ============================================
-// Tab Switching - Remove active from all
-// Yeh function sabhi tabs se "active" class hatata hai
-// ============================================
-function removeActiveFromAllTabs() {
-    
-    // forEach loop - sabhi tab buttons par ek-ek karke chalega
-    // button = current element jo loop mein hai
-    // forEach = array ke har item par function chalata hai
-    // allTabButtons.forEach(function(button) {
-        
-    //     // Har button se "active" class hatao
-    //     // classList.remove("active") = "active" class ko hata do
-    //     button.classList.remove("active");
-    // });
-    
-    // forEach loop - sabhi tab contents par ek-ek karke chalega
-    // content = current element jo loop mein hai
-    allTabContents.forEach(function(content) {
-        
-        // Har content se "active" class hatao
-        content.classList.remove("active");
-    });
-}
-
-
-// ============================================
-// Tab Switching - Add click event to each button
-// Har tab button par click event lagao
-// ============================================
-
-// forEach loop - sabhi tab buttons par ek-ek karke chalega
-// button = current element jo loop mein hai
-// forEach = array ke har item par function chalata hai
-allTabButtons.forEach(function(button) {
-    
-    // Har button par "click" event listener lagao
-    // addEventListener("click", function) = jab click ho toh function chalao
-    button.addEventListener("click", function() {
-        
-        // Pehle sabhi tabs se active hatao
-        // Taaki sirf ek tab active rahe
-        removeActiveFromAllTabs();
-        
-        // Jo button click hua usmein "active" class add karo
-        // this = jo button click hua (current button)
-        // classList.add("active") = "active" class add karo
-        this.classList.add("active");
-        
-        // Button ke data-tab attribute se tab ka naam lo
-        // dataset.tab = HTML mein data-tab="ask" jaisa likha hoga
-        // const = yeh value ek baar set hoke change nahi hogi
-        const tabName = this.dataset.tab;
-        
-        // Us naam se content element dhundo
-        // getElementById(tabName) = id se element dhundo
-        // const = yeh value ek baar set hoke change nahi hogi
-        const tabContent = document.getElementById(tabName);
-        
-        // Us content mein "active" class add karo
-        // Isse woh content dikhega
-        tabContent.classList.add("active");
-    });
-});
-
-
-// ============================================
-// API Call Function
-// Yeh function Gemini AI ko request bhejta hai
-// ============================================
-
-// async function = yeh function wait kar sakta hai API response ke liye
-// prompt = jo text hum AI ko bhejte hain
 async function callGeminiAPI(prompt) {
-    
-    // Key retrieval via getActiveApiKey()
     const currentKey = getActiveApiKey();
     
     if (!currentKey || currentKey === "YOUR_GEMINI_API_KEY_HERE" || currentKey.includes("your_key")) {
         throw new Error("API Key missing! Please check config.js or refresh your browser (Ctrl + F5).");
     }
 
-    // API URL banao
-    const apiUrl = getApiUrl(currentKey);
-    
-    // Request body banao - yeh data API ko jaayega
-    // contents = API ko yeh format chahiye
-    // parts = text ke parts
-    // text: prompt = humara question/text
-    // const = yeh object ek baar set hoke change nahi hoga
-    const requestBody = {
-        contents: [
-            {
-                parts: [
-                    { text: prompt }
-                ]
-            }
-        ]
-    };
-    
-    // Request options banao - request kaise bhejna hai
-    // method: "POST" = data bhej rahe hain
-    // headers = request ki information
-    // Content-Type = hum JSON bhej rahe hain
-    // body = actual data (string mein convert kiya)
-    // const = yeh object ek baar set hoke change nahi hoga
-    const requestOptions = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(requestBody)
-    };
-    
-    // API ko request bhejo aur response ka wait karo
-    // await = jab tak response na aaye tab tak ruko
-    // fetch = internet se data lene ka tarika
-    // const = response ek baar aake change nahi hoga
-    const response = await fetch(apiUrl, requestOptions);
-    const data = await response.json();
+    let lastError = null;
 
-    // Check karo ki response ok hai ya nahi
-    if (!response.ok || data.error) {
-        const errorMsg = data.error?.message || `API error: ${response.status}`;
-        if (response.status === 404 || response.status === 400 || response.status === 403) {
-            throw new Error(`${errorMsg} (Please check your API key in config.js)`);
+    for (const model of FALLBACK_MODELS) {
+        try {
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${currentKey}`;
+            const response = await fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
+                return data.candidates[0].content.parts[0].text;
+            }
+
+            if (data.error) {
+                lastError = data.error.message;
+                // If 429 rate limit or 404 model unavailable, try next fallback model!
+                if (response.status === 429 || response.status === 404) {
+                    console.warn(`Model ${model} returned ${response.status}. Retrying next model...`);
+                    continue;
+                } else {
+                    throw new Error(data.error.message);
+                }
+            }
+        } catch (err) {
+            lastError = err.message;
         }
-        throw new Error(errorMsg);
     }
-    // Response se text nikalo
-    // data.candidates[0].content.parts[0].text = nested object se text nikala
-    // ?. = optional chaining (agar koi cheez na ho toh error nahi aayega)
-    // const = yeh value ek baar set hoke change nahi hogi
-    const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    
-    // Agar text mila toh return karo
-    if (resultText) {
-        return resultText;
-    } else {
-        return "No response";
-    }
+
+    throw new Error(lastError || "API quota temporarily full. Please wait 10 seconds and try again.");
 }
 
 // ============================================
