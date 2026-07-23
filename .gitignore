@@ -1,4 +1,5 @@
 # Secret files
 .env
+mini/.env
 .env.local
 .env.*.local
