@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Content Generator</title>
+    <title>AI Content Generator — Dynamic Multi-Tab Workspace</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,22 +11,33 @@
     <!-- ===== Header Section ===== -->
     <header>
         <h1>🤖 AI Content Generator</h1>
-    
     </header>
 
-    <!-- ===== Navigation Tabs ===== -->
+    <!-- ===== Navigation Tabs & View Controls ===== -->
     <nav class="tabs">
-        <button class="tab-btn active" data-tab="ask">💬 Ask Me Anything</button>
-        <button class="tab-btn" data-tab="summarize">📝 Quick Summarizer</button>
-        <button class="tab-btn" data-tab="ideas">💡 Idea Spark</button>
+        <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="ask">💬 Ask Me Anything</button>
+            <button class="tab-btn" data-tab="summarize">📝 Quick Summarizer</button>
+            <button class="tab-btn" data-tab="ideas">💡 Idea Spark</button>
+        </div>
+        <div class="view-toggles">
+            <button class="view-btn active" id="btn-mode-single" title="Single Tab Mode">🔲 Single View</button>
+            <button class="view-btn" id="btn-mode-all" title="View All Side-by-Side">⚡ Split View (All 3)</button>
+        </div>
     </nav>
 
     <!-- ===== Main Content Area ===== -->
-    <main class="container">
+    <main class="container layout-1-col" id="main-container">
 
         <!-- Feature 1: Ask Me Anything -->
         <section id="ask" class="tab-content active">
-            <h2>Ask Me Anything</h2>
+            <div class="section-header">
+                <h2>💬 Ask Me Anything</h2>
+                <div class="panel-controls">
+                    <button class="panel-btn focus-btn" title="Focus View" data-target="ask">🗖</button>
+                    <button class="panel-btn close-btn" title="Close Section" data-target="ask">✕</button>
+                </div>
+            </div>
             <p class="description">Type any question and get an AI-powered answer instantly.</p>
 
             <div class="input-group">
@@ -46,7 +57,13 @@
 
         <!-- Feature 2: Quick Summarizer -->
         <section id="summarize" class="tab-content">
-            <h2>Quick Summarizer</h2>
+            <div class="section-header">
+                <h2>📝 Quick Summarizer</h2>
+                <div class="panel-controls">
+                    <button class="panel-btn focus-btn" title="Focus View" data-target="summarize">🗖</button>
+                    <button class="panel-btn close-btn" title="Close Section" data-target="summarize">✕</button>
+                </div>
+            </div>
             <p class="description">Paste a block of text and get a concise summary.</p>
 
             <div class="input-group">
@@ -66,7 +83,13 @@
 
         <!-- Feature 3: Idea Spark -->
         <section id="ideas" class="tab-content">
-            <h2>Idea Spark</h2>
+            <div class="section-header">
+                <h2>💡 Idea Spark</h2>
+                <div class="panel-controls">
+                    <button class="panel-btn focus-btn" title="Focus View" data-target="ideas">🗖</button>
+                    <button class="panel-btn close-btn" title="Close Section" data-target="ideas">✕</button>
+                </div>
+            </div>
             <p class="description">Need inspiration? Ask for ideas on any topic!</p>
 
             <div class="input-group">
@@ -88,13 +111,13 @@
 
     <!-- ===== Footer ===== -->
     <footer>
-        <!-- <p>Built with ❤️ using Vanilla JavaScript & Gemini AI</p> -->
+        <p>Dynamic AI Workspace • Auto-Adjusting Multi-Tab Layout</p>
     </footer>
 
-    <!-- API Keys (secret - not pushed to GitHub) -->
-    <script src="config.js?v=3"></script>
+    <!-- API Keys (secret - loaded locally) -->
+    <script src="config.js?v=4"></script>
     <!-- Link to our JavaScript file -->
-    <script src="app.js?v=3"></script>
+    <script src="app.js?v=4"></script>
 
 </body>
 </html>

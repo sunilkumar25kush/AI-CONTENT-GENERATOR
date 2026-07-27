@@ -1,9 +1,7 @@
 // ============================================
 // API Configuration
-// Yahan hum API ki settings rakhte hain
 // ============================================
 
-// API Key retrieval function
 function getActiveApiKey() {
     if (typeof window !== "undefined" && window.API_KEY) return window.API_KEY;
     if (typeof window !== "undefined" && window.API_KEYS) return window.API_KEYS;
@@ -13,15 +11,11 @@ function getActiveApiKey() {
 
 // MODEL Fallback List (rate limit / quota protection)
 const FALLBACK_MODELS = [
-    "gemini-3.5-flash",
-    "gemini-3.6-flash",
-    "gemini-flash-latest",
+    "gemini-1.5-flash",
+    "gemini-2.0-flash",
+    "gemini-1.5-pro",
     "gemini-2.5-flash"
 ];
-
-function getApiUrl(key) {
-    return `https://generativelanguage.googleapis.com/v1beta/models/${FALLBACK_MODELS[0]}:generateContent?key=${key}`;
-}
 
 // ============================================
 // API Call Function with Auto Fallback
@@ -56,7 +50,6 @@ async function callGeminiAPI(prompt) {
 
             if (data.error) {
                 lastError = data.error.message;
-                // If 429 rate limit or 404 model unavailable, try next fallback model!
                 if (response.status === 429 || response.status === 404) {
                     console.warn(`Model ${model} returned ${response.status}. Retrying next model...`);
                     continue;
@@ -74,7 +67,6 @@ async function callGeminiAPI(prompt) {
 
 // ============================================
 // MARKDOWN FORMATTER
-// Raw Markdown ko clean HTML formatted output mein badalta hai
 // ============================================
 function formatMarkdown(text) {
     if (!text) return "";
@@ -130,152 +122,284 @@ function formatMarkdown(text) {
 
 
 // ============================================
-// ASK AI - DOM Elements
-// Ask AI feature ke HTML elements
+// DYNAMIC WORKSPACE TAB & LAYOUT MANAGER
+// Auto-adjusts 1, 2, or 3 columns on screen
 // ============================================
 
+const mainContainer = document.getElementById("main-container");
+const tabButtons = document.querySelectorAll(".tab-btn");
+const tabContents = document.querySelectorAll(".tab-content");
+const btnModeSingle = document.getElementById("btn-mode-single");
+const btnModeAll = document.getElementById("btn-mode-all");
+
+// Current View Mode: 'single' or 'multi'
+let currentViewMode = 'single';
+
+function updateLayout() {
+    const activeSections = document.querySelectorAll(".tab-content.active");
+    const activeCount = activeSections.length;
+
+    // Reset container column classes
+    mainContainer.classList.remove("layout-1-col", "layout-2-col", "layout-3-col");
+
+    if (activeCount === 0) {
+        // Fallback: if user closes everything, re-open 'ask' section
+        const askSection = document.getElementById("ask");
+        if (askSection) askSection.classList.add("active");
+        mainContainer.classList.add("layout-1-col");
+    } else if (activeCount === 1) {
+        mainContainer.classList.add("layout-1-col");
+    } else if (activeCount === 2) {
+        mainContainer.classList.add("layout-2-col");
+    } else {
+        mainContainer.classList.add("layout-3-col");
+    }
+
+    // Sync tab buttons active status
+    tabButtons.forEach(btn => {
+        const targetId = btn.getAttribute("data-tab");
+        const targetSec = document.getElementById(targetId);
+        if (targetSec && targetSec.classList.contains("active")) {
+            btn.classList.add("active");
+        } else {
+            btn.classList.remove("active");
+        }
+    });
+
+    // Sync View Mode indicator buttons
+    if (activeCount >= 3) {
+        btnModeAll.classList.add("active");
+        btnModeSingle.classList.remove("active");
+        currentViewMode = 'multi';
+    } else if (activeCount === 1) {
+        btnModeSingle.classList.add("active");
+        btnModeAll.classList.remove("active");
+        currentViewMode = 'single';
+    } else {
+        btnModeSingle.classList.remove("active");
+        btnModeAll.classList.remove("active");
+        currentViewMode = 'multi';
+    }
+}
+
+// ---- Tab Button Click Handlers ----
+tabButtons.forEach(btn => {
+    btn.addEventListener("click", function() {
+        const targetId = this.getAttribute("data-tab");
+        const targetSection = document.getElementById(targetId);
+
+        if (currentViewMode === 'single') {
+            // In Single mode, hide all other sections and show only clicked section
+            tabContents.forEach(sec => sec.classList.remove("active"));
+            targetSection.classList.add("active");
+        } else {
+            // In Multi mode, toggle clicked section on/off
+            targetSection.classList.toggle("active");
+        }
+
+        updateLayout();
+    });
+});
+
+// ---- View Mode Buttons ----
+
+// Single View Mode: Shows 1 active tab centered
+if (btnModeSingle) {
+    btnModeSingle.addEventListener("click", function() {
+        currentViewMode = 'single';
+        
+        // Find current active tab or default to 'ask'
+        let currentlyActive = document.querySelector(".tab-content.active");
+        let activeId = currentlyActive ? currentlyActive.id : 'ask';
+
+        tabContents.forEach(sec => {
+            if (sec.id === activeId) {
+                sec.classList.add("active");
+            } else {
+                sec.classList.remove("active");
+            }
+        });
+
+        updateLayout();
+    });
+}
+
+// Split View Mode (All 3 Side-by-Side): Opens all 3 sections
+if (btnModeAll) {
+    btnModeAll.addEventListener("click", function() {
+        currentViewMode = 'multi';
+
+        tabContents.forEach(sec => sec.classList.add("active"));
+        updateLayout();
+    });
+}
+
+// ---- Panel Control Buttons (Focus & Close on each section card) ----
+document.querySelectorAll(".panel-btn").forEach(btn => {
+    btn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        const targetId = this.getAttribute("data-target");
+        const targetSection = document.getElementById(targetId);
+
+        if (this.classList.contains("close-btn")) {
+            // Close panel
+            targetSection.classList.remove("active");
+            updateLayout();
+        } else if (this.classList.contains("focus-btn")) {
+            // Focus on single panel
+            currentViewMode = 'single';
+            tabContents.forEach(sec => {
+                if (sec.id === targetId) {
+                    sec.classList.add("active");
+                } else {
+                    sec.classList.remove("active");
+                }
+            });
+            updateLayout();
+        }
+    });
+});
+
+// Initialize layout on page load
+updateLayout();
+
+
+// ============================================
+// ASK AI - Action Logic
+// ============================================
 const askInput = document.getElementById("ask-input");
 const askButton = document.getElementById("ask-btn");
 const askResultBox = document.getElementById("ask-result");
 const askOutputText = document.getElementById("ask-output");
 
+if (askInput && askButton) {
+    askInput.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            askButton.click();
+        }
+    });
+}
 
-// ============================================
-// ASK AI - Click Handler
-// Jab user "Ask" button click kare toh kya ho
-// ============================================
-
-askButton.addEventListener("click", async function() {
-    
-    const userQuestion = askInput.value.trim();
-    
-    if (!userQuestion) {
-        alert("Please enter a question first!");
-        return;
-    }
-    
-    askResultBox.classList.remove("hidden");
-    askOutputText.innerHTML = '<div class="loading-state">⚡ Thinking...</div>';
-    
-    askButton.disabled = true;
-    askButton.textContent = "Thinking...";
-    
-    const prompt = "Answer this question clearly with clean formatting:\n\n" + userQuestion;
-    
-    try {
-        const result = await callGeminiAPI(prompt);
-        // Formatted Markdown render karo
-        askOutputText.innerHTML = formatMarkdown(result);
+if (askButton) {
+    askButton.addEventListener("click", async function() {
+        const userQuestion = askInput.value.trim();
         
-    } catch (error) {
-        askOutputText.innerHTML = `<div class="error-state">❌ Error: ${error.message}</div>`;
-    }
-    
-    askButton.disabled = false;
-    askButton.textContent = "Ask";
-});
+        if (!userQuestion) {
+            alert("Please enter a question first!");
+            return;
+        }
+        
+        askResultBox.classList.remove("hidden");
+        askOutputText.innerHTML = '<div class="loading-state">⚡ Thinking...</div>';
+        
+        askButton.disabled = true;
+        askButton.textContent = "Thinking...";
+        
+        const prompt = "Answer this question clearly with clean markdown formatting:\n\n" + userQuestion;
+        
+        try {
+            const result = await callGeminiAPI(prompt);
+            askOutputText.innerHTML = formatMarkdown(result);
+        } catch (error) {
+            askOutputText.innerHTML = `<div class="error-state">❌ Error: ${error.message}</div>`;
+        }
+        
+        askButton.disabled = false;
+        askButton.textContent = "Ask";
+    });
+}
 
 
 // ============================================
-// SUMMARIZER - DOM Elements
-// Summarizer feature ke HTML elements
+// SUMMARIZER - Action Logic
 // ============================================
-
-// Input field jahan user text likhta hai summarize karne ke liye
-// const = DOM element reference kabhi change nahi hoga
 const summarizeInput = document.getElementById("summarize-input");
-
-// "Summarize" button
-// const = DOM element reference kabhi change nahi hoga
 const summarizeButton = document.getElementById("summarize-btn");
-
-// Result box jahan summary aayegi
-// const = DOM element reference kabhi change nahi hoga
 const summarizeResultBox = document.getElementById("summarize-result");
-
-// Summary text element
-// const = DOM element reference kabhi change nahi hoga
 const summarizeOutputText = document.getElementById("summarize-output");
 
+if (summarizeInput && summarizeButton) {
+    summarizeInput.addEventListener("keydown", function(e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            summarizeButton.click();
+        }
+    });
+}
 
-// ============================================
-// SUMMARIZER - Click Handler
-// Jab user "Summarize" button click kare toh kya ho
-// ============================================
-
-// Summarize button par click event lagao
-summarizeButton.addEventListener("click", async function() {
-    
-    // User ka text lo aur extra spaces hatao
-    // const = yeh value ek baar set hoke change nahi hogi
-    const userText = summarizeInput.value.trim();
-    
-    // Check karo ki user ne kuch likha hai ya nahi
-    if (!userText) {
-        alert("Please enter some text first!");
-        return;
-    }
-    
-    summarizeResultBox.classList.remove("hidden");
-    summarizeOutputText.innerHTML = '<div class="loading-state">⚡ Summarizing...</div>';
-    
-    summarizeButton.disabled = true;
-    summarizeButton.textContent = "Summarizing...";
-    
-    const prompt = "Summarize in 3-5 concise sentences:\n\n" + userText;
-    
-    try {
-        const result = await callGeminiAPI(prompt);
-        summarizeOutputText.innerHTML = formatMarkdown(result);
+if (summarizeButton) {
+    summarizeButton.addEventListener("click", async function() {
+        const userText = summarizeInput.value.trim();
         
-    } catch (error) {
-        summarizeOutputText.innerHTML = `<div class="error-state">❌ Error: ${error.message}</div>`;
-    }
-    
-    summarizeButton.disabled = false;
-    summarizeButton.textContent = "Summarize";
-});
+        if (!userText) {
+            alert("Please enter some text first!");
+            return;
+        }
+        
+        summarizeResultBox.classList.remove("hidden");
+        summarizeOutputText.innerHTML = '<div class="loading-state">⚡ Summarizing...</div>';
+        
+        summarizeButton.disabled = true;
+        summarizeButton.textContent = "Summarizing...";
+        
+        const prompt = "Summarize in 3-5 concise sentences:\n\n" + userText;
+        
+        try {
+            const result = await callGeminiAPI(prompt);
+            summarizeOutputText.innerHTML = formatMarkdown(result);
+        } catch (error) {
+            summarizeOutputText.innerHTML = `<div class="error-state">❌ Error: ${error.message}</div>`;
+        }
+        
+        summarizeButton.disabled = false;
+        summarizeButton.textContent = "Summarize";
+    });
+}
 
 
 // ============================================
-// IDEA GENERATOR - DOM Elements
+// IDEA GENERATOR - Action Logic
 // ============================================
-
 const ideasInput = document.getElementById("ideas-input");
 const ideasButton = document.getElementById("ideas-btn");
 const ideasResultBox = document.getElementById("ideas-result");
 const ideasOutputText = document.getElementById("ideas-output");
 
+if (ideasInput && ideasButton) {
+    ideasInput.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            ideasButton.click();
+        }
+    });
+}
 
-// ============================================
-// IDEA GENERATOR - Click Handler
-// ============================================
-
-ideasButton.addEventListener("click", async function() {
-    
-    const userTopic = ideasInput.value.trim();
-    
-    if (!userTopic) {
-        alert("Please enter a topic first!");
-        return;
-    }
-    
-    ideasResultBox.classList.remove("hidden");
-    ideasOutputText.innerHTML = '<div class="loading-state">⚡ Generating Ideas...</div>';
-    
-    ideasButton.disabled = true;
-    ideasButton.textContent = "Generating...";
-    
-    const prompt = "Generate 5 creative ideas with clean markdown bullet points about:\n\n" + userTopic;
-    
-    try {
-        const result = await callGeminiAPI(prompt);
-        ideasOutputText.innerHTML = formatMarkdown(result);
+if (ideasButton) {
+    ideasButton.addEventListener("click", async function() {
+        const userTopic = ideasInput.value.trim();
         
-    } catch (error) {
-        ideasOutputText.innerHTML = `<div class="error-state">❌ Error: ${error.message}</div>`;
-    }
-    
-    ideasButton.disabled = false;
-    ideasButton.textContent = "Get Ideas";
-});
+        if (!userTopic) {
+            alert("Please enter a topic first!");
+            return;
+        }
+        
+        ideasResultBox.classList.remove("hidden");
+        ideasOutputText.innerHTML = '<div class="loading-state">⚡ Generating Ideas...</div>';
+        
+        ideasButton.disabled = true;
+        ideasButton.textContent = "Generating...";
+        
+        const prompt = "Generate 5 creative ideas with clean markdown bullet points about:\n\n" + userTopic;
+        
+        try {
+            const result = await callGeminiAPI(prompt);
+            ideasOutputText.innerHTML = formatMarkdown(result);
+        } catch (error) {
+            ideasOutputText.innerHTML = `<div class="error-state">❌ Error: ${error.message}</div>`;
+        }
+        
+        ideasButton.disabled = false;
+        ideasButton.textContent = "Get Ideas";
+    });
+}

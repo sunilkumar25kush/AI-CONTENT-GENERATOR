@@ -1,6 +1,6 @@
 /* =============================================
    AI CONTENT GENERATOR — CYBERPUNK GLASSMORPHISM
-   Matches: dark bg + colorful bokeh + code aesthetic
+   Dynamic Auto-Adjusting Multi-Tab Layout
    ============================================= */
 
 /* ---------- Google Font ---------- */
@@ -14,9 +14,9 @@
     --neon-yellow: #ffd60a;
     --neon-green: #30d158;
 
-    --glass-bg: rgba(10, 10, 20, 0.55);
-    --glass-border: rgba(0, 245, 255, 0.18);
-    --glass-hover: rgba(10, 10, 30, 0.72);
+    --glass-bg: rgba(10, 10, 25, 0.75);
+    --glass-border: rgba(0, 245, 255, 0.22);
+    --glass-hover: rgba(15, 15, 35, 0.85);
 
     --text-primary: #f0f6ff;
     --text-secondary: #a8b8d0;
@@ -55,27 +55,22 @@ body {
     background-position: center center;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    /* background-color: #050510; */
-
-
-    /* Dark overlay to keep text readable without hiding the image */
     position: relative;
 }
 
-/* Semi-transparent dark overlay sits between image and content */
+/* Semi-transparent dark overlay */
 body::before {
     content: '';
     position: fixed;
     inset: 0;
     background: linear-gradient(135deg,
-            rgba(0, 0, 10, 0.70) 0%,
-            rgba(5, 0, 20, 0.70) 50%,
-            rgba(0, 0, 10, 0.70) 100%);
+            rgba(0, 0, 10, 0.72) 0%,
+            rgba(5, 0, 20, 0.75) 50%,
+            rgba(0, 0, 10, 0.72) 100%);
     z-index: 0;
     pointer-events: none;
 }
 
-/* All direct children of body stack above the overlay */
 body>* {
     position: relative;
     z-index: 1;
@@ -84,6 +79,7 @@ body>* {
 /* ---------- Scrollbar ---------- */
 ::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -101,18 +97,17 @@ body>* {
    ============================================= */
 header {
     text-align: center;
-    padding: 52px 24px 28px;
+    padding: 40px 24px 20px;
 }
 
 header h1 {
     font-family: 'Orbitron', sans-serif;
-    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
     font-weight: 800;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--text-primary);
 
-    /* Neon glow effect matching the cyan bokeh lights */
     text-shadow:
         0 0 8px var(--neon-cyan),
         0 0 20px var(--neon-cyan),
@@ -122,26 +117,19 @@ header h1 {
     animation: headerPulse 3s ease-in-out infinite alternate;
 }
 
-header h1 .emoji {
-    display: inline-block;
-    animation: spin 6s linear infinite;
-}
-
 @keyframes headerPulse {
     from {
         text-shadow: 0 0 8px var(--neon-cyan), 0 0 20px var(--neon-cyan), 0 0 42px rgba(0, 245, 255, 0.45);
     }
-
     to {
         text-shadow: 0 0 12px var(--neon-purple), 0 0 28px var(--neon-purple), 0 0 60px rgba(191, 90, 242, 0.5);
     }
 }
 
-/* Decorative line under header */
 header::after {
     content: '';
     display: block;
-    margin: 20px auto 0;
+    margin: 16px auto 0;
     width: 200px;
     height: 2px;
     background: linear-gradient(90deg,
@@ -154,13 +142,21 @@ header::after {
 }
 
 /* =============================================
-   NAV TABS
+   NAV TABS & VIEW TOGGLES
    ============================================= */
 nav.tabs {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 0 24px 30px;
+}
+
+.tab-buttons,
+.view-toggles {
+    display: flex;
     justify-content: center;
     gap: 12px;
-    padding: 0 24px 36px;
     flex-wrap: wrap;
 }
 
@@ -169,13 +165,11 @@ nav.tabs {
     font-size: 0.9rem;
     font-weight: 600;
     letter-spacing: 0.04em;
-    /* color: var(--text-secondary); */
-    /* background: var(--glass-bg); */
-     background:var(--neon-cyan);
-         color: var(--text-secondary);
+    color: var(--text-secondary);
+    background: rgba(10, 10, 25, 0.65);
     border: 1px solid var(--glass-border);
     border-radius: 50px;
-    padding: 10px 26px;
+    padding: 10px 24px;
     cursor: pointer;
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
@@ -184,7 +178,6 @@ nav.tabs {
     overflow: hidden;
 }
 
-/* Sheen effect on hover */
 .tab-btn::before {
     content: '';
     position: absolute;
@@ -199,10 +192,10 @@ nav.tabs {
 }
 
 .tab-btn:hover {
-    /* color: var(--neon-cyan); */
+    color: var(--neon-cyan);
     border-color: rgba(0, 245, 255, 0.5);
-    /* background: rgba(0, 245, 255, 0.07); */
-    box-shadow: 0 0 18px rgba(0, 245, 255, 0.25), inset 0 0 12px rgba(0, 245, 255, 0.06);
+    background: rgba(0, 245, 255, 0.1);
+    box-shadow: 0 0 18px rgba(0, 245, 255, 0.25);
     transform: translateY(-2px);
 }
 
@@ -216,237 +209,295 @@ nav.tabs {
     font-weight: 700;
 }
 
-/* =============================================
-   MAIN CONTAINER
-   ============================================= */
-main.container {
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 0 20px 80px;
+/* View Mode Switcher Buttons */
+.view-toggles {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 12px;
+    margin-top: 4px;
+}
+
+.view-btn {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--neon-purple);
+    background: rgba(191, 90, 242, 0.1);
+    border: 1px solid rgba(191, 90, 242, 0.35);
+    border-radius: 50px;
+    padding: 8px 20px;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    transition: var(--transition);
+}
+
+.view-btn:hover {
+    background: rgba(191, 90, 242, 0.25);
+    border-color: var(--neon-purple);
+    box-shadow: 0 0 14px rgba(191, 90, 242, 0.4);
+    transform: translateY(-2px);
+}
+
+.view-btn.active {
+    background: var(--neon-purple);
+    color: #ffffff;
+    border-color: var(--neon-purple);
+    box-shadow:
+        0 0 20px rgba(191, 90, 242, 0.6),
+        0 4px 14px rgba(191, 90, 242, 0.4);
 }
 
 /* =============================================
-   TAB SECTIONS (Glass Cards)
+   DYNAMIC MAIN CONTAINER GRID LAYOUT
+   ============================================= */
+main.container {
+    width: 95%;
+    margin: 0 auto;
+    padding: 0 12px 60px;
+    display: grid;
+    gap: 24px;
+    transition: max-width 0.45s cubic-bezier(0.4, 0, 0.2, 1), grid-template-columns 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    align-items: start;
+}
+
+/* 1-column layout (Centered single tab mode) */
+main.container.layout-1-col {
+    max-width: 780px;
+    grid-template-columns: 1fr;
+}
+
+/* 2-column layout (Split 50% / 50%) */
+main.container.layout-2-col {
+    max-width: 1180px;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* 3-column layout (Side-by-side 33% / 33% / 33%) */
+main.container.layout-3-col {
+    max-width: 1560px;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* =============================================
+   TAB SECTIONS (Glass Window Cards)
    ============================================= */
 .tab-content {
     display: none;
-    animation: fadeSlideIn 0.4s ease forwards;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    height: 100%;
 }
 
 .tab-content.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    animation: fadeSlideIn 0.4s ease forwards;
+}
+
+.tab-content:hover {
+    border-color: rgba(0, 245, 255, 0.4);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.75),
+        0 0 20px rgba(0, 245, 255, 0.15);
 }
 
 @keyframes fadeSlideIn {
     from {
         opacity: 0;
-        transform: translateY(18px);
+        transform: translateY(18px) scale(0.98);
     }
-
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1.0);
     }
 }
 
-/* ---- Section heading ---- */
-.tab-content h2 {
+/* ---- Section Panel Header & Controls ---- */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 245, 255, 0.18);
+}
+
+.section-header h2 {
     font-family: 'Orbitron', sans-serif;
-    font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+    font-size: 1.15rem;
     font-weight: 600;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     color: var(--neon-cyan);
-    margin-bottom: 6px;
-    text-shadow: 0 0 12px rgba(0, 245, 255, 0.5);
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.panel-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.panel-btn {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-secondary);
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.panel-btn:hover {
+    background: var(--neon-cyan);
+    color: #000;
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.panel-btn.close-btn:hover {
+    background: var(--neon-pink);
+    color: #fff;
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 10px var(--neon-pink);
 }
 
 .tab-content .description {
-    font-size: 0.95rem;
-    color: #d0d0e0;
-    margin-bottom: 24px;
-    padding-left: 2px;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    font-size: 0.88rem;
+    color: #b0c0d8;
+    margin-bottom: 18px;
+    line-height: 1.5;
 }
 
 /* =============================================
-   GLASSMORPHISM INPUT CARD
+   GLASSMORPHISM INPUT AREA
    ============================================= */
 .input-group {
-    background: rgba(10, 10, 25, 0.85);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-lg);
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
-    padding: 28px 28px 22px;
-    box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.65),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    transition: var(--transition);
-}
-
-.input-group:focus-within {
-    border-color: rgba(0, 245, 255, 0.4);
-    box-shadow:
-        0 8px 40px rgba(0, 0, 0, 0.55),
-        0 0 0 1px rgba(0, 245, 255, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-/* ---------- Text Input ---------- */
-input[type="text"] {
-    width: 100%;
-    background: rgba(15, 15, 35, 0.9);
-    border: 1px solid rgba(255, 102, 128, 0.3);
+    background: rgba(5, 5, 18, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius-md);
-    color: #ffffff;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.95rem;
-    padding: 14px 18px;
-    outline: none;
-    transition: var(--transition);
-    caret-color: #ff6680;
+    padding: 18px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-input[type="text"]::placeholder {
-    color: var(--text-muted);
-}
-
-input[type="text"]:focus {
-    background: rgba(255, 102, 128, 0.06);
-    border-color: #ff6680;
-    box-shadow: 0 0 0 3px rgba(255, 102, 128, 0.15);
-}
-
-/* ---------- Textarea ---------- */
+/* Inputs & Textareas */
+input[type="text"],
 textarea {
     width: 100%;
     background: rgba(15, 15, 35, 0.9);
-    border: 1px solid rgba(255, 102, 128, 0.3);
-    border-radius: var(--radius-md);
+    border: 1px solid rgba(0, 245, 255, 0.25);
+    border-radius: var(--radius-sm);
     color: #ffffff;
     font-family: 'Inter', sans-serif;
-    font-size: 0.93rem;
-    line-height: 1.7;
-    padding: 14px 18px;
+    font-size: 0.92rem;
+    padding: 12px 14px;
     outline: none;
-    resize: vertical;
-    min-height: 130px;
     transition: var(--transition);
-    caret-color: #ff6680;
+    caret-color: var(--neon-cyan);
 }
 
+input[type="text"]::placeholder,
 textarea::placeholder {
     color: var(--text-muted);
 }
 
+input[type="text"]:focus,
 textarea:focus {
-    background: rgba(255, 102, 128, 0.06);
-    border-color: #ff6680;
-    box-shadow: 0 0 0 3px rgba(255, 102, 128, 0.15);
+    background: rgba(0, 245, 255, 0.06);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 0 3px rgba(0, 245, 255, 0.18);
 }
 
-/* ---------- Action Button ---------- */
+textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+}
+
+/* Action Buttons */
 .action-btn {
-    margin-top: 16px;
     width: 100%;
-    padding: 14px 24px;
+    padding: 12px 20px;
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 600;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: #fff;
     background: linear-gradient(135deg, #ff6680 0%, #ff4d6d 100%);
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     cursor: pointer;
     transition: var(--transition);
-    position: relative;
-    overflow: hidden;
-    box-shadow:
-        0 4px 18px rgba(255, 102, 128, 0.45),
-        0 0 0 0 #ff6680;
-}
-
-.action-btn::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.25) 50%, transparent 70%);
-    transform: translateX(-100%);
-    transition: 0.55s ease;
-}
-
-.action-btn:hover::after {
-    transform: translateX(120%);
+    box-shadow: 0 4px 16px rgba(255, 102, 128, 0.4);
 }
 
 .action-btn:hover {
-    transform: translateY(-3px);
-    box-shadow:
-        0 8px 28px rgba(255, 102, 128, 0.65),
-        0 0 0 1px rgba(255, 102, 128, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(255, 102, 128, 0.65);
 }
 
 .action-btn:active {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(255, 102, 128, 0.45);
+    transform: translateY(0);
 }
 
 /* =============================================
-   RESULT BOX (Glass Output Card)
+   RESULT BOX (Output Card)
    ============================================= */
 .result-box {
-    margin-top: 20px;
-    background: rgba(5, 5, 18, 0.90);
+    margin-top: auto;
+    background: rgba(5, 5, 18, 0.92);
     border: 1px solid rgba(0, 245, 255, 0.25);
-    border-radius: var(--radius-lg);
-    padding: 26px 28px;
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
-    box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.55),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    animation: fadeSlideIn 0.4s ease forwards;
+    border-radius: var(--radius-md);
+    padding: 18px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    animation: fadeSlideIn 0.35s ease forwards;
+    max-height: 380px;
+    overflow-y: auto;
 }
 
 .result-box h3 {
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.78rem;
-    letter-spacing: 0.18em;
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--neon-cyan);
-    margin-bottom: 14px;
-    opacity: 0.85;
-}
-
-.result-box p {
-    font-size: 1rem;
-    color: #ffffff;
-    line-height: 1.9;
-    font-weight: 400;
-    /* Strong readability over dark glass */
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+    margin-bottom: 10px;
+    opacity: 0.9;
 }
 
 .result-box.hidden {
     display: none;
 }
 
-/* =============================================
-   MARKDOWN & CLEAN OUTPUT STYLING
-   ============================================= */
+/* Markdown formatting inside result boxes */
 .markdown-content {
-    font-size: 0.96rem;
+    font-size: 0.9rem;
     color: var(--text-primary);
-    line-height: 1.85;
+    line-height: 1.75;
 }
 
 .markdown-content p {
-    margin-bottom: 14px;
-    font-size: 0.96rem;
+    margin-bottom: 10px;
     color: #e2e8f0;
-    line-height: 1.85;
 }
 
 .markdown-content h2,
@@ -454,78 +505,38 @@ textarea:focus {
 .markdown-content h4 {
     font-family: 'Orbitron', sans-serif;
     color: var(--neon-cyan);
-    margin: 20px 0 10px 0;
+    margin: 14px 0 8px 0;
     font-weight: 600;
-    letter-spacing: 0.04em;
-}
-
-.markdown-content h2 {
-    font-size: 1.2rem;
-    border-bottom: 1px solid rgba(0, 245, 255, 0.25);
-    padding-bottom: 8px;
-}
-
-.markdown-content h3 {
-    font-size: 1.08rem;
-    color: var(--neon-cyan);
-}
-
-.markdown-content h4 {
-    font-size: 1.0rem;
-    color: #ff6680;
 }
 
 .markdown-content strong {
     color: var(--neon-yellow);
-    font-weight: 600;
-}
-
-.markdown-content em {
-    color: var(--neon-purple);
-    font-style: italic;
 }
 
 .markdown-content ul,
 .markdown-content ol {
-    margin: 12px 0 16px 20px;
-    padding-left: 10px;
+    margin: 8px 0 12px 18px;
 }
 
 .markdown-content li {
-    margin-bottom: 8px;
-    line-height: 1.75;
-    color: #f1f5f9;
-}
-
-.markdown-content li strong {
-    color: var(--neon-cyan);
+    margin-bottom: 6px;
 }
 
 .markdown-content code {
     background: rgba(0, 245, 255, 0.12);
     color: var(--neon-cyan);
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-family: 'Fira Code', 'Courier New', monospace;
-    font-size: 0.88em;
-    border: 1px solid rgba(0, 245, 255, 0.2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85em;
 }
 
 .markdown-content pre {
     background: rgba(5, 5, 18, 0.95);
     border: 1px solid rgba(0, 245, 255, 0.3);
-    padding: 16px;
-    border-radius: 12px;
+    padding: 12px;
+    border-radius: 8px;
     overflow-x: auto;
-    margin: 16px 0;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.7);
-}
-
-.markdown-content pre code {
-    background: transparent;
-    border: none;
-    padding: 0;
-    color: #a5f3fc;
+    margin: 12px 0;
 }
 
 .loading-state {
@@ -540,9 +551,9 @@ textarea:focus {
     color: #ff4d6d;
     background: rgba(255, 77, 109, 0.1);
     border: 1px solid rgba(255, 77, 109, 0.3);
-    padding: 12px 16px;
+    padding: 10px 14px;
     border-radius: 8px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 /* =============================================
@@ -550,15 +561,14 @@ textarea:focus {
    ============================================= */
 footer {
     text-align: center;
-    padding: 24px;
+    padding: 20px;
     color: var(--text-muted);
     font-size: 0.8rem;
     letter-spacing: 0.05em;
 }
 
 /* =============================================
-   AMBIENT ANIMATED PARTICLES (CSS only, pure bokeh dots)
-   Simulates the colorful lights from the image
+   BACKGROUND AMBIENT PARTICLES
    ============================================= */
 body::after {
     content: '';
@@ -570,19 +580,12 @@ body::after {
     top: 20%;
     left: 10%;
     box-shadow:
-        /* Cyan dots */
         80vw 10vh 0 3px rgba(0, 245, 255, 0.7),
         15vw 75vh 0 2px rgba(0, 245, 255, 0.5),
         55vw 88vh 0 4px rgba(0, 245, 255, 0.4),
-        /* Purple / pink dots */
         30vw 20vh 0 2px rgba(191, 90, 242, 0.65),
         70vw 55vh 0 3px rgba(255, 55, 95, 0.55),
-        90vw 40vh 0 2px rgba(255, 55, 95, 0.40),
-        /* Yellow / green dots */
-        10vw 45vh 0 2px rgba(255, 214, 10, 0.50),
-        50vw 30vh 0 3px rgba(48, 209, 88, 0.45),
-        85vw 80vh 0 2px rgba(48, 209, 88, 0.35),
-        40vw 65vh 0 4px rgba(255, 214, 10, 0.30);
+        90vw 40vh 0 2px rgba(255, 55, 95, 0.40);
     animation: particleDrift 8s ease-in-out infinite alternate;
     z-index: 0;
     pointer-events: none;
@@ -594,7 +597,6 @@ body::after {
         transform: translate(0, 0) scale(1.0);
         opacity: 0.75;
     }
-
     to {
         transform: translate(6px, -8px) scale(1.1);
         opacity: 1;
@@ -602,23 +604,27 @@ body::after {
 }
 
 /* =============================================
-   RESPONSIVE
+   RESPONSIVE LAYOUT BREAKPOINTS
    ============================================= */
-@media (max-width: 600px) {
-    .input-group {
-        padding: 20px 18px 16px;
+@media (max-width: 1024px) {
+    main.container.layout-3-col {
+        grid-template-columns: repeat(2, 1fr);
     }
+}
 
-    .result-box {
-        padding: 20px 18px;
+@media (max-width: 720px) {
+    main.container.layout-2-col,
+    main.container.layout-3-col {
+        grid-template-columns: 1fr;
     }
 
     nav.tabs {
-        gap: 8px;
+        padding-bottom: 20px;
     }
 
-    .tab-btn {
-        padding: 8px 18px;
-        font-size: 0.82rem;
+    .tab-btn,
+    .view-btn {
+        font-size: 0.8rem;
+        padding: 8px 16px;
     }
 }
