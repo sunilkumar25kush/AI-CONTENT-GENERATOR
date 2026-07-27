@@ -31,8 +31,7 @@ async function callGeminiAPI(prompt) {
     const currentKey = getActiveApiKey();
     
     if (!currentKey) {
-        openApiKeyModal("⚠️ Please enter your Gemini API key below to continue.");
-        throw new Error("API Key missing! Please enter your key in the settings window.");
+        throw new Error("API Key missing! Please check config.js or refresh your browser.");
     }
 
     let lastError = null;
@@ -409,93 +408,5 @@ if (ideasButton) {
         
         ideasButton.disabled = false;
         ideasButton.textContent = "Get Ideas";
-    });
-}
-
-
-// ============================================
-// API KEY SETTINGS MODAL LOGIC
-// ============================================
-const apiKeyBtn = document.getElementById("api-key-btn");
-const apiKeyModal = document.getElementById("api-key-modal");
-const closeModalBtn = document.getElementById("close-modal-btn");
-const modalApiKeyInput = document.getElementById("modal-api-key-input");
-const saveApiKeyBtn = document.getElementById("save-api-key-btn");
-const clearApiKeyBtn = document.getElementById("clear-api-key-btn");
-const toggleKeyVisibilityBtn = document.getElementById("toggle-key-visibility");
-const keyStatusMsg = document.getElementById("key-status-msg");
-
-function openApiKeyModal(msg = "") {
-    if (!apiKeyModal) return;
-    apiKeyModal.classList.remove("hidden");
-    const currentKey = getActiveApiKey();
-    if (modalApiKeyInput) {
-        modalApiKeyInput.value = currentKey;
-    }
-    if (keyStatusMsg) {
-        keyStatusMsg.textContent = msg || (currentKey ? "✅ API key is currently saved." : "⚠️ No API key set yet.");
-        keyStatusMsg.className = "key-status-msg " + (currentKey ? "success" : "warning");
-    }
-}
-
-function closeApiKeyModal() {
-    if (apiKeyModal) {
-        apiKeyModal.classList.add("hidden");
-    }
-}
-
-if (apiKeyBtn) {
-    apiKeyBtn.addEventListener("click", () => openApiKeyModal());
-}
-
-if (closeModalBtn) {
-    closeModalBtn.addEventListener("click", closeApiKeyModal);
-}
-
-if (apiKeyModal) {
-    apiKeyModal.addEventListener("click", (e) => {
-        if (e.target === apiKeyModal) closeApiKeyModal();
-    });
-}
-
-if (toggleKeyVisibilityBtn && modalApiKeyInput) {
-    toggleKeyVisibilityBtn.addEventListener("click", () => {
-        if (modalApiKeyInput.type === "password") {
-            modalApiKeyInput.type = "text";
-            toggleKeyVisibilityBtn.textContent = "🙈";
-        } else {
-            modalApiKeyInput.type = "password";
-            toggleKeyVisibilityBtn.textContent = "👁️";
-        }
-    });
-}
-
-if (saveApiKeyBtn && modalApiKeyInput) {
-    saveApiKeyBtn.addEventListener("click", () => {
-        const val = modalApiKeyInput.value.trim();
-        if (!val) {
-            if (keyStatusMsg) {
-                keyStatusMsg.textContent = "❌ Please enter a valid API key!";
-                keyStatusMsg.className = "key-status-msg error";
-            }
-            return;
-        }
-        localStorage.setItem("GEMINI_API_KEY", val);
-        if (keyStatusMsg) {
-            keyStatusMsg.textContent = "✅ API Key saved in browser!";
-            keyStatusMsg.className = "key-status-msg success";
-        }
-        setTimeout(closeApiKeyModal, 1000);
-    });
-}
-
-if (clearApiKeyBtn && modalApiKeyInput) {
-    clearApiKeyBtn.addEventListener("click", () => {
-        localStorage.removeItem("GEMINI_API_KEY");
-        modalApiKeyInput.value = "";
-        if (keyStatusMsg) {
-            keyStatusMsg.textContent = "🗑️ API Key cleared from browser.";
-            keyStatusMsg.className = "key-status-msg warning";
-        }
     });
 }
