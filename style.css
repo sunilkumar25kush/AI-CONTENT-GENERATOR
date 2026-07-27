@@ -604,27 +604,187 @@ body::after {
 }
 
 /* =============================================
-   RESPONSIVE LAYOUT BREAKPOINTS
+   RESPONSIVE LAYOUT BREAKPOINTS & MOBILE OPTIMIZATIONS
    ============================================= */
+
+/* Tablet & Smaller Laptops (<= 1024px) */
 @media (max-width: 1024px) {
+    main.container {
+        width: 98%;
+        gap: 18px;
+    }
+
     main.container.layout-3-col {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 720px) {
-    main.container.layout-2-col,
-    main.container.layout-3-col {
-        grid-template-columns: 1fr;
+/* Tablets & Mobile Devices (<= 768px) */
+@media (max-width: 768px) {
+    header {
+        padding: 24px 16px 12px;
+    }
+
+    header h1 {
+        font-size: clamp(1.4rem, 6vw, 2rem);
+    }
+
+    header::after {
+        width: 140px;
+        margin-top: 10px;
     }
 
     nav.tabs {
-        padding-bottom: 20px;
+        padding: 0 16px 20px;
+        gap: 12px;
     }
 
-    .tab-btn,
-    .view-btn {
-        font-size: 0.8rem;
+    .tab-buttons {
+        gap: 8px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .tab-btn {
+        font-size: 0.82rem;
         padding: 8px 16px;
+        flex: 1 1 auto;
+        text-align: center;
+        max-width: 160px;
+    }
+
+    .view-toggles {
+        gap: 8px;
+        padding-top: 8px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .view-btn {
+        font-size: 0.75rem;
+        padding: 6px 14px;
+    }
+
+    main.container,
+    main.container.layout-1-col,
+    main.container.layout-2-col,
+    main.container.layout-3-col {
+        width: 100%;
+        grid-template-columns: 1fr;
+        padding: 0 10px 40px;
+        gap: 16px;
+    }
+
+    .tab-content {
+        padding: 18px 14px;
+        border-radius: var(--radius-md);
+    }
+
+    .section-header h2 {
+        font-size: 1rem;
+    }
+
+    .input-group {
+        padding: 14px 12px;
+        gap: 10px;
+    }
+
+    /* Prevent iOS browser auto-zoom on input focus */
+    input[type="text"],
+    textarea {
+        font-size: 16px !important;
+        padding: 10px 12px;
+    }
+
+    textarea {
+        min-height: 100px;
+    }
+
+    .action-btn {
+        padding: 12px 16px;
+        font-size: 0.85rem;
+    }
+
+    .result-box {
+        padding: 14px;
+        max-height: 320px;
+    }
+}
+
+/* Small Mobile Screens (<= 480px) */
+@media (max-width: 480px) {
+    header {
+        padding: 18px 12px 10px;
+    }
+
+    header h1 {
+        font-size: 1.3rem;
+    }
+
+    nav.tabs {
+        padding: 0 10px 16px;
+        gap: 10px;
+    }
+
+    .tab-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .tab-btn {
+        font-size: 0.75rem;
+        padding: 8px 12px;
+        border-radius: 20px;
+        flex: 1 1 calc(33% - 6px);
+        min-width: 90px;
+        text-align: center;
+    }
+
+    .view-toggles {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .view-btn {
+        font-size: 0.72rem;
+        padding: 6px 10px;
+        flex: 1;
+        text-align: center;
+    }
+
+    .tab-content {
+        padding: 14px 10px;
+    }
+
+    .section-header h2 {
+        font-size: 0.92rem;
+    }
+
+    .panel-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
+
+    .input-group {
+        padding: 12px 10px;
+    }
+
+    .result-box {
+        padding: 12px;
+        max-height: 280px;
+    }
+
+    .result-box h3 {
+        font-size: 0.7rem;
+    }
+
+    .markdown-content {
+        font-size: 0.86rem;
     }
 }
