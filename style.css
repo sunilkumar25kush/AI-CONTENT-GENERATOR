@@ -628,3 +628,196 @@ body::after {
         padding: 8px 16px;
     }
 }
+
+/* =============================================
+   HEADER & SETTINGS BUTTON
+   ============================================= */
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 10px;
+}
+
+.settings-btn {
+    background: rgba(0, 245, 255, 0.1);
+    border: 1px solid rgba(0, 245, 255, 0.3);
+    color: var(--neon-cyan);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.82rem;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    letter-spacing: 0.05em;
+}
+
+.settings-btn:hover {
+    background: rgba(0, 245, 255, 0.25);
+    box-shadow: 0 0 12px rgba(0, 245, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+/* =============================================
+   API KEY MODAL DIALOG (Cyberpunk Glassmorphism)
+   ============================================= */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 5, 18, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.25s ease forwards;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-card {
+    background: rgba(12, 12, 36, 0.95);
+    border: 1px solid rgba(0, 245, 255, 0.35);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 245, 255, 0.2);
+    width: 100%;
+    max-width: 480px;
+    padding: 26px;
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.modal-header h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.05rem;
+    color: var(--neon-cyan);
+    letter-spacing: 0.05em;
+}
+
+.modal-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: var(--transition);
+}
+
+.modal-close-btn:hover {
+    color: #ff4d6d;
+}
+
+.modal-desc {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.input-group-modal {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.input-group-modal input {
+    flex: 1;
+    background: rgba(5, 5, 18, 0.8);
+    border: 1px solid rgba(0, 245, 255, 0.25);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.input-group-modal input:focus {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
+}
+
+.toggle-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+.key-status-msg {
+    font-size: 0.84rem;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
+
+.key-status-msg.success {
+    background: rgba(48, 209, 88, 0.15);
+    color: #30d158;
+    border: 1px solid rgba(48, 209, 88, 0.3);
+}
+
+.key-status-msg.warning {
+    background: rgba(255, 214, 10, 0.15);
+    color: #ffd60a;
+    border: 1px solid rgba(255, 214, 10, 0.3);
+}
+
+.key-status-msg.error {
+    background: rgba(255, 77, 109, 0.15);
+    color: #ff4d6d;
+    border: 1px solid rgba(255, 77, 109, 0.3);
+}
+
+.modal-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.modal-save-btn {
+    background: linear-gradient(135deg, #00f5ff 0%, #00a8ff 100%);
+    color: #050512;
+    font-weight: 700;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    transition: var(--transition);
+}
+
+.modal-save-btn:hover {
+    box-shadow: 0 0 14px rgba(0, 245, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+.modal-clear-btn {
+    background: rgba(255, 77, 109, 0.15);
+    color: #ff4d6d;
+    border: 1px solid rgba(255, 77, 109, 0.3);
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: var(--transition);
+}
+
+.modal-clear-btn:hover {
+    background: rgba(255, 77, 109, 0.3);
+}

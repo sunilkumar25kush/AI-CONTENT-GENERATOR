@@ -10,7 +10,10 @@
 
     <!-- ===== Header Section ===== -->
     <header>
-        <h1>🤖 AI Content Generator</h1>
+        <div class="header-content">
+            <h1>🤖 AI Content Generator</h1>
+            <button id="api-key-btn" class="settings-btn" title="Configure API Key">⚙️ API Key</button>
+        </div>
     </header>
 
     <!-- ===== Navigation Tabs & View Controls ===== -->
@@ -108,6 +111,32 @@
         </section>
 
     </main>
+
+    <!-- ===== API Key Settings Modal ===== -->
+    <div id="api-key-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>⚙️ Gemini API Key Settings</h3>
+                <button id="close-modal-btn" class="modal-close-btn" title="Close Modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">Enter your Google Gemini API key below. It will be saved securely in your browser's local storage.</p>
+                <div class="input-group-modal">
+                    <input
+                        type="password"
+                        id="modal-api-key-input"
+                        placeholder="Paste your Gemini API key (AIzaSy...)"
+                    />
+                    <button id="toggle-key-visibility" class="toggle-btn" title="Toggle Visibility">👁️</button>
+                </div>
+                <div id="key-status-msg" class="key-status-msg"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-api-key-btn" class="modal-save-btn">Save Key</button>
+                <button id="clear-api-key-btn" class="modal-clear-btn">Clear Key</button>
+            </div>
+        </div>
+    </div>
 
     <!-- ===== Footer ===== -->
     <footer>

@@ -3,9 +3,7 @@
 // ============================================
 
 (function() {
-    const _p1 = "AQ.Ab8RN6JTl8tmjqH7c67";
-    const _p2 = "6rHMOVw0rWudI2BRPT4hZE30bCWgyKw";
-    const key = _p1 + _p2;
-    window.API_KEY = key;
-    window.API_KEYS = key;
+    // Set your API key here or enter it via the ⚙️ Settings button in the app UI
+    window.API_KEY = "YOUR_GEMINI_API_KEY_HERE";
+    window.API_KEYS = "YOUR_GEMINI_API_KEY_HERE";
 })();
